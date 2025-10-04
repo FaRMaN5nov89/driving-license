@@ -1,4 +1,11 @@
-<!DOCTYPE html>
+function showDayPicker() {
+            const modal = document.getElementById('pickerModal');
+            const grid = document.getElementById('gridContainer');
+            document.getElementById('modalTitle').textContent = 'هەڵبژاردنی ڕۆژ';
+            
+            const daysInMonth = new Date(selectedYear, selectedMonth, 0).getDate();
+            grid.innerHTML = '';
+            grid.style.gridTemplateColumns = 'repeat(7, 1fr)';<!DOCTYPE html>
 <html lang="ku" dir="rtl">
 <head>
     <meta charset="UTF-8">
@@ -204,7 +211,8 @@
             background: white;
             border-radius: 20px;
             padding: 30px;
-            max-width: 400px;
+            max-width: 500px;
+            width: 90%;
             max-height: 80vh;
             overflow-y: auto;
         }
@@ -219,7 +227,7 @@
 
         .grid-container {
             display: grid;
-            grid-template-columns: repeat(4, 1fr);
+            grid-template-columns: repeat(5, 1fr);
             gap: 10px;
         }
 
@@ -228,7 +236,7 @@
             color: white;
             border: 2px solid white;
             border-radius: 15px;
-            padding: 15px;
+            padding: 12px;
             font-size: 16px;
             font-weight: bold;
             cursor: pointer;
@@ -376,7 +384,9 @@
             
             const daysInMonth = new Date(selectedYear, selectedMonth, 0).getDate();
             grid.innerHTML = '';
-            grid.style.gridTemplateColumns = 'repeat(7, 1fr)';
+            grid.style.gridTemplateColumns = 'repeat(5, 1fr)'; // 5 columns
+            
+            const totalCells = 35; // 7 rows x 5 columns
             
             for (let day = 1; day <= daysInMonth; day++) {
                 const btn = document.createElement('button');
@@ -390,12 +400,22 @@
                 };
                 grid.appendChild(btn);
             }
+            
+            // Add empty cells to fill the grid
+            const remainingCells = totalCells - daysInMonth;
+            for (let i = 0; i < remainingCells; i++) {
+                const emptyBtn = document.createElement('div');
+                emptyBtn.style.background = 'transparent';
+                emptyBtn.style.border = 'none';
+                grid.appendChild(emptyBtn);
+            }
+            
             modal.classList.add('active');
         }
 
         function closeModal() {
             document.getElementById('pickerModal').classList.remove('active');
-            document.getElementById('gridContainer').style.gridTemplateColumns = 'repeat(4, 1fr)';
+            document.getElementById('gridContainer').style.gridTemplateColumns = 'repeat(5, 1fr)';
         }
 
         document.getElementById('pickerModal').onclick = function(e) {
