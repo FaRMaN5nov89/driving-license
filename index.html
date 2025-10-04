@@ -1,11 +1,4 @@
-function showDayPicker() {
-            const modal = document.getElementById('pickerModal');
-            const grid = document.getElementById('gridContainer');
-            document.getElementById('modalTitle').textContent = 'هەڵبژاردنی ڕۆژ';
-            
-            const daysInMonth = new Date(selectedYear, selectedMonth, 0).getDate();
-            grid.innerHTML = '';
-            grid.style.gridTemplateColumns = 'repeat(7, 1fr)';<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ku" dir="rtl">
 <head>
     <meta charset="UTF-8">
@@ -227,7 +220,6 @@ function showDayPicker() {
 
         .grid-container {
             display: grid;
-            grid-template-columns: repeat(5, 1fr);
             gap: 10px;
         }
 
@@ -343,6 +335,8 @@ function showDayPicker() {
             document.getElementById('modalTitle').textContent = 'هەڵبژاردنی ساڵ';
             
             grid.innerHTML = '';
+            grid.style.gridTemplateColumns = 'repeat(4, 1fr)';
+            
             for (let year = 2015; year <= 2030; year++) {
                 const btn = document.createElement('button');
                 btn.className = 'grid-button';
@@ -363,6 +357,8 @@ function showDayPicker() {
             document.getElementById('modalTitle').textContent = 'هەڵبژاردنی مانگ';
             
             grid.innerHTML = '';
+            grid.style.gridTemplateColumns = 'repeat(4, 1fr)';
+            
             for (let month = 1; month <= 12; month++) {
                 const btn = document.createElement('button');
                 btn.className = 'grid-button';
@@ -384,9 +380,9 @@ function showDayPicker() {
             
             const daysInMonth = new Date(selectedYear, selectedMonth, 0).getDate();
             grid.innerHTML = '';
-            grid.style.gridTemplateColumns = 'repeat(5, 1fr)'; // 5 columns
+            grid.style.gridTemplateColumns = 'repeat(5, 1fr)';
             
-            const totalCells = 35; // 7 rows x 5 columns
+            const totalCells = 35;
             
             for (let day = 1; day <= daysInMonth; day++) {
                 const btn = document.createElement('button');
@@ -401,7 +397,6 @@ function showDayPicker() {
                 grid.appendChild(btn);
             }
             
-            // Add empty cells to fill the grid
             const remainingCells = totalCells - daysInMonth;
             for (let i = 0; i < remainingCells; i++) {
                 const emptyBtn = document.createElement('div');
@@ -415,7 +410,6 @@ function showDayPicker() {
 
         function closeModal() {
             document.getElementById('pickerModal').classList.remove('active');
-            document.getElementById('gridContainer').style.gridTemplateColumns = 'repeat(5, 1fr)';
         }
 
         document.getElementById('pickerModal').onclick = function(e) {
