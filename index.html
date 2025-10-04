@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="ku" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FaRMaN - هەژمارکردنی پارەی مۆڵەتی شوفێری</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            direction: rtl;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: #F8FAFC;
+            border-radius: 30px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+
+        h1 {
+            text-align: center;
+            color: #1E293B;
+            font-size: 28px;
+            margin-bottom: 30px;
+            font-weight: bold;
+        }
+
+        .date-title {
+            text-align: center;
+            color: #7C3AED;
+            font-size: 24px;
+            margin-bottom: 20px;
+            font-weight: bold;
+        }
+
+        .date-display {
+            background: #EDE9FE;
+            border: 3px solid #7C3AED;
+            border-radius: 20px;
+            padding: 20px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .date-display-text {
+            color: #7C3AED;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .today-text {
+            text-align: center;
+            color: #475569;
+            font-size: 16px;
+            margin-bottom: 20px;
+            font-weight: bold;
+        }
+
+        .date-picker {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .date-button {
+            background: linear-gradient(135deg, #7C3AED 0%, #6D28D9 100%);
+            color: white;
+            border: 3px solid white;
+            border-radius: 20px;
+            padding: 30px 10px;
+            font-size: 24px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .date-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(124, 58, 237, 0.3);
+        }
+
+        .date-button.month {
+            background: linear-gradient(135deg, #10B981 0%, #059669 100%);
+        }
+
+        .date-button.day {
+            background: linear-gradient(135deg, #F59E0B 0%, #D97706 100%);
+        }
+
+        .action-buttons {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .btn {
+            padding: 20px;
+            font-size: 18px;
+            font-weight: bold;
+            border: 3px solid white;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s;
+            color: white;
+        }
+
+        .btn-calculate {
+            background: linear-gradient(135deg, #F59E0B 0%, #D97706 100%);
+        }
+
+        .btn-reset {
+            background: linear-gradient(135deg, #EF4444 0%, #DC2626 100%);
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+        }
+
+        .result-container {
+            background: #F0F9FF;
+            border: 4px solid #0EA5E9;
+            border-radius: 25px;
+            padding: 30px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .result-total {
+            color: #0369A1;
+            font-size: 26px;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+
+        .result-details {
+            color: #475569;
+            font-size: 14px;
+            line-height: 1.8;
+            white-space: pre-line;
+        }
+
+        .rules-container {
+            background: #E8F4FD;
+            border: 3px solid #0EA5E9;
+            border-radius: 20px;
+            padding: 30px;
+        }
+
+        .rules-title {
+            text-align: center;
+            color: #0369A1;
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        .rule-item {
+            color: #475569;
+            font-size: 15px;
+            text-align: center;
+            padding: 8px 0;
+        }
+
+        .prepared-by {
+            text-align: center;
+            color: #64748B;
+            font-size: 14px;
+            font-style: italic;
+            margin-top: 20px;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.7);
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            max-width: 400px;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .modal-title {
+            font-size: 20px;
+            font-weight: bold;
+            color: #1E293B;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+        }
+
+        .grid-button {
+            background: linear-gradient(135deg, #10B981 0%, #059669 100%);
+            color: white;
+            border: 2px solid white;
+            border-radius: 15px;
+            padding: 15px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .grid-button:hover {
+            transform: scale(1.05);
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 20px;
+            }
+            
+            h1 {
+                font-size: 22px;
+            }
+            
+            .date-title {
+                font-size: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>هەژمارکردنی پارەی مۆڵەتی شوفێری</h1>
+        
+        <div class="date-title" id="dateTitle">ڕێکەوتی بەسەرچوونی مۆڵەت:</div>
+        
+        <div class="date-display">
+            <div class="date-display-text" id="selectedDate">1/1/2025</div>
+        </div>
+        
+        <div class="today-text" id="todayText"></div>
+        
+        <div class="date-picker">
+            <button class="date-button" id="yearBtn" onclick="showYearPicker()">2025</button>
+            <button class="date-button month" id="monthBtn" onclick="showMonthPicker()">1</button>
+            <button class="date-button day" id="dayBtn" onclick="showDayPicker()">1</button>
+        </div>
+        
+        <div class="action-buttons">
+            <button class="btn btn-calculate" onclick="calculateFine()">هەژمارکردن</button>
+            <button class="btn btn-reset" onclick="resetDate()">پاککردنەوە</button>
+        </div>
+        
+        <div class="result-container">
+            <div class="result-total" id="resultTotal">کۆی گشتی: ٠ دینار</div>
+            <div class="result-details" id="resultDetails">ووردەکاری مۆڵەت لێرە دەردەکەوێت</div>
+        </div>
+        
+        <div class="rules-container">
+            <div class="rules-title">یاساکانی مۆڵەتی شوفێری:</div>
+            <div class="rule-item">• ٢٠٠٠ --->>> ٣/١٢/٢٠١٩: غرامە١٢,٠٠٠ + ٦٥,٠٠٠</div>
+            <div class="rule-item">• ٤/١٢/٢٠١٩ ---> ٦/٧/٢٠٢٢: ٢٤,٠٠٠بۆ هەرساڵێك + ٦٥,٠٠٠</div>
+            <div class="rule-item">• ٧/٧/٢٠٢٢ ---> ١٧/٧/٢٠٢٢: ١٦,٠٠٠ بۆ هەر ساڵێك + ٦٥,٠٠٠</div>
+            <div class="rule-item">• لە ١٨/٧/٢٠٢٢ تا ئێستا: ٤,٠٠٠ بۆ هەر مانگێك + ٦٥,٠٠٠</div>
+            <div class="rule-item">• شەش مانگ یان زیاتر پێش کۆتایی: ١١٥,٠٠٠</div>
+            <div class="rule-item">• کەمتر لە شەش مانگ پێش کۆتایی: ٦٥,٠٠٠</div>
+            <div class="rule-item">• بزرکردن و تێکچوونی مۆڵەت ٦٠،٠٠٠</div>
+            <div class="prepared-by">Prepared by: FaRMaN Abdulqadr</div>
+        </div>
+    </div>
+
+    <div class="modal" id="pickerModal">
+        <div class="modal-content">
+            <div class="modal-title" id="modalTitle"></div>
+            <div class="grid-container" id="gridContainer"></div>
+        </div>
+    </div>
+
+    <script>
+        let selectedYear = 2025;
+        let selectedMonth = 1;
+        let selectedDay = 1;
+
+        function init() {
+            const today = new Date();
+            selectedYear = today.getFullYear();
+            selectedMonth = today.getMonth() + 1;
+            selectedDay = today.getDate();
+            updateDisplay();
+            updateTodayText();
+        }
+
+        function updateDisplay() {
+            document.getElementById('yearBtn').textContent = selectedYear;
+            document.getElementById('monthBtn').textContent = selectedMonth;
+            document.getElementById('dayBtn').textContent = selectedDay;
+            document.getElementById('selectedDate').textContent = `${selectedDay}/${selectedMonth}/${selectedYear}`;
+        }
+
+        function updateTodayText() {
+            const today = new Date();
+            document.getElementById('todayText').textContent = 
+                `ڕێکەوتی ئەمڕۆ: ${today.getDate()}/${today.getMonth() + 1}/${today.getFullYear()}`;
+        }
+
+        function showYearPicker() {
+            const modal = document.getElementById('pickerModal');
+            const grid = document.getElementById('gridContainer');
+            document.getElementById('modalTitle').textContent = 'هەڵبژاردنی ساڵ';
+            
+            grid.innerHTML = '';
+            for (let year = 2015; year <= 2030; year++) {
+                const btn = document.createElement('button');
+                btn.className = 'grid-button';
+                btn.textContent = year;
+                btn.onclick = () => {
+                    selectedYear = year;
+                    updateDisplay();
+                    closeModal();
+                };
+                grid.appendChild(btn);
+            }
+            modal.classList.add('active');
+        }
+
+        function showMonthPicker() {
+            const modal = document.getElementById('pickerModal');
+            const grid = document.getElementById('gridContainer');
+            document.getElementById('modalTitle').textContent = 'هەڵبژاردنی مانگ';
+            
+            grid.innerHTML = '';
+            for (let month = 1; month <= 12; month++) {
+                const btn = document.createElement('button');
+                btn.className = 'grid-button';
+                btn.textContent = month;
+                btn.onclick = () => {
+                    selectedMonth = month;
+                    updateDisplay();
+                    closeModal();
+                };
+                grid.appendChild(btn);
+            }
+            modal.classList.add('active');
+        }
+
+        function showDayPicker() {
+            const modal = document.getElementById('pickerModal');
+            const grid = document.getElementById('gridContainer');
+            document.getElementById('modalTitle').textContent = 'هەڵبژاردنی ڕۆژ';
+            
+            const daysInMonth = new Date(selectedYear, selectedMonth, 0).getDate();
+            grid.innerHTML = '';
+            grid.style.gridTemplateColumns = 'repeat(7, 1fr)';
+            
+            for (let day = 1; day <= daysInMonth; day++) {
+                const btn = document.createElement('button');
+                btn.className = 'grid-button';
+                btn.style.background = 'linear-gradient(135deg, #7C3AED 0%, #6D28D9 100%)';
+                btn.textContent = day;
+                btn.onclick = () => {
+                    selectedDay = day;
+                    updateDisplay();
+                    closeModal();
+                };
+                grid.appendChild(btn);
+            }
+            modal.classList.add('active');
+        }
+
+        function closeModal() {
+            document.getElementById('pickerModal').classList.remove('active');
+            document.getElementById('gridContainer').style.gridTemplateColumns = 'repeat(4, 1fr)';
+        }
+
+        document.getElementById('pickerModal').onclick = function(e) {
+            if (e.target === this) closeModal();
+        };
+
+        function calculateFine() {
+            const expDate = new Date(selectedYear, selectedMonth - 1, selectedDay);
+            const today = new Date();
+            
+            expDate.setHours(0, 0, 0, 0);
+            today.setHours(0, 0, 0, 0);
+
+            if (expDate > today) {
+                const monthsDiff = getMonthsDifference(today, expDate);
+                if (monthsDiff >= 6) {
+                    showResult(115000, 0, 'مۆڵەتەکەت هێشتا بەسەرنەچووە\nشەش مانگ یان زیاتر ماوە: ١١٥,٠٠٠ رسومات');
+                } else {
+                    showResult(65000, 0, 'مۆڵەتەکەت هێشتا بەسەرنەچووە\nکەمتر لە شەش مانگ ماوە: ٦٥,٠٠٠ رسومات');
+                }
+                return;
+            }
+
+            const result = calculateDriverLicenseFine(expDate, today);
+            const details = `ووردەکاری کۆتایی مۆڵەت:
+- غرامە: ${formatNumber(result.fine)} دینار
+- رسومات: ${formatNumber(result.fees)} دینار
+- ساڵی کۆتایی: ${result.yearsExpired}
+- مانگی کۆتایی: ${result.monthsExpired}
+- جۆری غرامە: ${result.category}`;
+            
+            showResult(result.total, result.fine, details);
+        }
+
+        function calculateDriverLicenseFine(expDate, today) {
+            const fees = 65000;
+            let fine = 0;
+            let category = '';
+
+            const date0 = new Date(2015, 0, 1);
+            const date1 = new Date(2019, 11, 3);
+            const date2 = new Date(2019, 11, 4);
+            const date3 = new Date(2022, 6, 6);
+            const date4 = new Date(2022, 6, 7);
+            const date5 = new Date(2022, 6, 17);
+            const date6 = new Date(2022, 6, 18);
+
+            const yearDiff = today.getFullYear() - expDate.getFullYear();
+            const monthDiff = today.getMonth() - expDate.getMonth();
+            const dayDiff = today.getDate() - expDate.getDate();
+
+            let totalMonths = yearDiff * 12 + monthDiff;
+            let remainingDays = dayDiff;
+
+            if (dayDiff < 0) {
+                totalMonths--;
+                const lastMonth = new Date(today.getFullYear(), today.getMonth(), 0);
+                remainingDays = lastMonth.getDate() + dayDiff;
+            }
+
+            let totalYearsExpired = 0;
+            if (totalMonths > 0 || remainingDays > 0) {
+                const fullYears = Math.floor(totalMonths / 12);
+                const hasAdditionalTime = (totalMonths % 12 > 0) || (remainingDays > 0);
+                totalYearsExpired = hasAdditionalTime ? fullYears + 1 : (fullYears === 0 ? 1 : fullYears);
+            }
+
+            if (totalYearsExpired === 0) {
+                return { fine: 0, fees, total: fees, yearsExpired: 0, monthsExpired: 0, category: 'مۆڵەت کۆتایی نەهاتووە' };
+            }
+
+            if (expDate >= date0 && expDate <= date1) {
+                category = 'جۆری ٠ (٢٠١٥ - ٣/١٢/٢٠١٩)';
+                fine = 12000;
+            } else if (expDate >= date2 && expDate <= date3) {
+                category = 'جۆری ١ (٤/١٢/٢٠١٩ - ٦/٧/٢٠٢٢)';
+                fine = totalYearsExpired * 24000;
+            } else if (expDate >= date4 && expDate <= date5) {
+                category = 'جۆری ٢ (٧/٧/٢٠٢٢ - ١٧/٧/٢٠٢٢)';
+                fine = totalYearsExpired * 16000;
+            } else if (expDate >= date6) {
+                category = 'جۆری ٣ (لە ١٨/٧/٢٠٢٢ تا ئێستا)';
+                const chargeableMonths = remainingDays > 0 ? totalMonths : (totalMonths > 0 ? totalMonths - 1 : 0);
+                fine = chargeableMonths * 4000;
+                totalYearsExpired = Math.floor(chargeableMonths / 12);
+                totalMonths = chargeableMonths;
+            }
+
+            return {
+                fine,
+                fees,
+                total: fine + fees,
+                yearsExpired: totalYearsExpired,
+                monthsExpired: totalMonths % 12,
+                category
+            };
+        }
+
+        function getMonthsDifference(date1, date2) {
+            const yearDiff = date2.getFullYear() - date1.getFullYear();
+            const monthDiff = date2.getMonth() - date1.getMonth();
+            return yearDiff * 12 + monthDiff;
+        }
+
+        function showResult(total, fine, details) {
+            document.getElementById('resultTotal').textContent = `کۆی گشتی: ${formatNumber(total)} دینار`;
+            document.getElementById('resultDetails').textContent = details;
+        }
+
+        function formatNumber(num) {
+            return num.toLocaleString('en-US');
+        }
+
+        function resetDate() {
+            init();
+            document.getElementById('resultTotal').textContent = 'کۆی گشتی: ٠ دینار';
+            document.getElementById('resultDetails').textContent = 'ووردەکاری مۆڵەت لێرە دەردەکەوێت';
+        }
+
+        init();
+    </script>
+</body>
+</html>
