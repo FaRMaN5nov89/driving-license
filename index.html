@@ -424,8 +424,20 @@
             today.setHours(0, 0, 0, 0);
 
             if (expDate > today) {
-                const monthsDiff = getMonthsDifference(today, expDate);
-                if (monthsDiff >= 6) {
+                // حیسابکردنی مانگەکان بە ڕاست
+                const yearDiff = expDate.getFullYear() - today.getFullYear();
+                const monthDiff = expDate.getMonth() - today.getMonth();
+                const dayDiff = expDate.getDate() - today.getDate();
+                
+                let totalMonths = yearDiff * 12 + monthDiff;
+                
+                // ئەگەر ڕۆژەکە زیاتر بێت، مانگێکی تەواو تێپەڕیوە
+                if (dayDiff > 0) {
+                    totalMonths++;
+                }
+                
+                // ئەگەر زیاتر لە 6 مانگ
+                if (totalMonths > 6) {
                     showResult(115000, 0, 'مۆڵەتەکەت هێشتا بەسەرنەچووە\nشەش مانگ یان زیاتر ماوە: ١١٥,٠٠٠ رسومات');
                 } else {
                     showResult(65000, 0, 'مۆڵەتەکەت هێشتا بەسەرنەچووە\nکەمتر لە شەش مانگ ماوە: ٦٥,٠٠٠ رسومات');
