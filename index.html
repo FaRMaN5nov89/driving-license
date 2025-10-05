@@ -32,8 +32,78 @@
             text-align: center;
             color: #1E293B;
             font-size: 28px;
-            margin-bottom: 30px;
+            margin-bottom: 20px;
             font-weight: bold;
+        }
+
+        .discount-container {
+            background: #FEF3C7;
+            border: 3px solid #F59E0B;
+            border-radius: 20px;
+            padding: 15px 20px;
+            margin-bottom: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .discount-label {
+            color: #92400E;
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 60px;
+            height: 34px;
+        }
+
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #EF4444;
+            transition: .4s;
+            border-radius: 34px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 26px;
+            width: 26px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+        input:checked + .slider {
+            background-color: #10B981;
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(26px);
+        }
+
+        .discount-status {
+            font-size: 14px;
+            color: #DC2626;
+            margin-top: 5px;
+            font-weight: bold;
+            transition: color 0.3s;
         }
 
         .date-title {
@@ -258,6 +328,17 @@
     <div class="container">
         <h1>هەژمارکردنی پارەی مۆڵەتی شوفێری</h1>
         
+        <div class="discount-container">
+            <div>
+                <div class="discount-label">داشکانی ٢٠٪ لەسەر غەرامە</div>
+                <div class="discount-status" id="discountStatus">داشکان چاڵاک نییە</div>
+            </div>
+            <label class="switch">
+                <input type="checkbox" id="discountSwitch" onchange="toggleDiscount()">
+                <span class="slider"></span>
+            </label>
+        </div>
+        
         <div class="date-title" id="dateTitle">ڕێکەوتی بەسەرچوونی مۆڵەت:</div>
         
         <div class="date-display">
@@ -284,10 +365,10 @@
         
         <div class="rules-container">
             <div class="rules-title">یاساکانی مۆڵەتی شوفێری:</div>
-            <div class="rule-item">• ٢٠٠٠ --->>> ٣/١٢/٢٠١٩: غرامە١٢,٠٠٠ + ٦٥,٠٠٠</div>
-            <div class="rule-item">• ٤/١٢/٢٠١٩ ---> ٦/٧/٢٠٢٢: ٢٤,٠٠٠بۆ هەرساڵێك + ٦٥,٠٠٠</div>
-            <div class="rule-item">• ٧/٧/٢٠٢٢ ---> ١٧/٧/٢٠٢٢: ١٦,٠٠٠ بۆ هەر ساڵێك + ٦٥,٠٠٠</div>
-            <div class="rule-item">• لە ١٨/٧/٢٠٢٢ تا ئێستا: ٤,٠٠٠ بۆ هەر مانگێك + ٦٥,٠٠٠</div>
+            <div class="rule-item">• ٢٠٠٠ --->>> ٣/١٢/٢٠١٩: غرامە١٢,٠٠٠ (بە داشکان) یان ١٥,٠٠٠ (بێ داشکان) + ٦٥,٠٠٠</div>
+            <div class="rule-item">• ٤/١٢/٢٠١٩ ---> ٦/٧/٢٠٢٢: ٢٤,٠٠٠ (بە داشکان) یان ٣٠,٠٠٠ (بێ داشکان) بۆ هەرساڵێك + ٦٥,٠٠٠</div>
+            <div class="rule-item">• ٧/٧/٢٠٢٢ ---> ١٧/٧/٢٠٢٢: ١٦,٠٠٠ (بە داشکان) یان ٢٠,٠٠٠ (بێ داشکان) بۆ هەر ساڵێك + ٦٥,٠٠٠</div>
+            <div class="rule-item">• لە ١٨/٧/٢٠٢٢ تا ئێستا: ٤,٠٠٠ (بە داشکان) یان ٥,٠٠٠ (بێ داشکان) بۆ هەر مانگێك + ٦٥,٠٠٠</div>
             <div class="rule-item">• شەش مانگ یان زیاتر پێش کۆتایی: ١١٥,٠٠٠</div>
             <div class="rule-item">• کەمتر لە شەش مانگ پێش کۆتایی: ٦٥,٠٠٠</div>
             <div class="rule-item">• بزرکردن و تێکچوونی مۆڵەت ٦٠،٠٠٠</div>
@@ -306,6 +387,20 @@
         let selectedYear = 2025;
         let selectedMonth = 1;
         let selectedDay = 1;
+        let discountActive = false;
+
+        function toggleDiscount() {
+            discountActive = document.getElementById('discountSwitch').checked;
+            const statusElement = document.getElementById('discountStatus');
+            
+            if (discountActive) {
+                statusElement.textContent = 'داشکانی ٢٠٪ چاڵاکە';
+                statusElement.style.color = '#059669';
+            } else {
+                statusElement.textContent = 'داشکان چاڵاک نییە';
+                statusElement.style.color = '#DC2626';
+            }
+        }
 
         function init() {
             const today = new Date();
@@ -492,17 +587,20 @@
 
             if (expDate >= date0 && expDate <= date1) {
                 category = 'جۆری ٠ (٢٠١٥ - ٣/١٢/٢٠١٩)';
-                fine = 12000;
+                fine = discountActive ? 12000 : 15000;
             } else if (expDate >= date2 && expDate <= date3) {
                 category = 'جۆری ١ (٤/١٢/٢٠١٩ - ٦/٧/٢٠٢٢)';
-                fine = totalYearsExpired * 24000;
+                const finePerYear = discountActive ? 24000 : 30000;
+                fine = totalYearsExpired * finePerYear;
             } else if (expDate >= date4 && expDate <= date5) {
                 category = 'جۆری ٢ (٧/٧/٢٠٢٢ - ١٧/٧/٢٠٢٢)';
-                fine = totalYearsExpired * 16000;
+                const finePerYear = discountActive ? 16000 : 20000;
+                fine = totalYearsExpired * finePerYear;
             } else if (expDate >= date6) {
                 category = 'جۆری ٣ (لە ١٨/٧/٢٠٢٢ تا ئێستا)';
                 const chargeableMonths = remainingDays > 0 ? totalMonths : (totalMonths > 0 ? totalMonths - 1 : 0);
-                fine = chargeableMonths * 4000;
+                const finePerMonth = discountActive ? 4000 : 5000;
+                fine = chargeableMonths * finePerMonth;
                 totalYearsExpired = Math.floor(chargeableMonths / 12);
                 totalMonths = chargeableMonths;
             }
