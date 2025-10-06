@@ -117,25 +117,6 @@
             font-weight: bold;
         }
 
-        .date-display {
-            background: #EDE9FE;
-            border: 3px solid #7C3AED;
-            border-radius: 20px;
-            padding: 20px;
-            text-align: center;
-            margin-bottom: 20px;
-        }
-
-        .date-display-text {
-            color: #7C3AED;
-            font-size: 28px;
-            font-weight: bold;
-        }
-
-        .today-text {
-            display: none;
-        }
-
         .date-picker {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
@@ -337,10 +318,6 @@
         
         <div class="date-title" id="dateTitle">ڕێکەوتی بەسەرچوونی مۆڵەت:</div>
         
-        <div class="date-display">
-            <div class="date-display-text" id="selectedDate">1/1/2025</div>
-        </div>
-        
         <div class="date-picker">
             <button class="date-button" id="yearBtn" onclick="showYearPicker()">2025</button>
             <button class="date-button month" id="monthBtn" onclick="showMonthPicker()">1</button>
@@ -362,7 +339,7 @@
             <div class="rule-item">• لە ١٨/٧/٢٠٢٢ تا ئێستا: ٤,٠٠٠ (بە داشکان) یان ٥,٠٠٠ (بێ داشکان) بۆ هەر مانگێك + ٦٥,٠٠٠</div>
             <div class="rule-item">• شەش مانگ یان زیاتر پێش کۆتایی: ١١٥,٠٠٠</div>
             <div class="rule-item">• کەمتر لە شەش مانگ پێش کۆتایی: ٦٥,٠٠٠</div>
-            <div class="rule-item">• وونبوون و تێکچوونی مۆڵەت ٦٠،٠٠٠</div>
+            <div class="rule-item">• بزرکردن و تێکچوونی مۆڵەت ٦٠،٠٠٠</div>
             <div class="prepared-by">Prepared by: FaRMaN Abdulqadr</div>
         </div>
     </div>
@@ -408,7 +385,6 @@
             document.getElementById('yearBtn').textContent = selectedYear;
             document.getElementById('monthBtn').textContent = selectedMonth;
             document.getElementById('dayBtn').textContent = selectedDay;
-            document.getElementById('selectedDate').textContent = `${selectedDay}/${selectedMonth}/${selectedYear}`;
         }
 
         function showYearPicker() {
