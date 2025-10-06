@@ -15,17 +15,20 @@
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
-            padding: 20px;
+            padding: 0;
+            margin: 0;
             direction: rtl;
         }
 
         .container {
-            max-width: 600px;
-            margin: 0 auto;
+            max-width: 100%;
+            width: 100%;
+            min-height: 100vh;
+            margin: 0;
             background: #F8FAFC;
-            border-radius: 30px;
-            padding: 40px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            border-radius: 0;
+            padding: 40px 20px;
+            box-shadow: none;
         }
 
         h1 {
@@ -100,8 +103,10 @@
 
         .discount-status {
             font-size: 14px;
-            color: #92400E;
+            color: #DC2626;
             margin-top: 5px;
+            font-weight: bold;
+            transition: color 0.3s;
         }
 
         .date-title {
@@ -128,11 +133,7 @@
         }
 
         .today-text {
-            text-align: center;
-            color: #475569;
-            font-size: 16px;
-            margin-bottom: 20px;
-            font-weight: bold;
+            display: none;
         }
 
         .date-picker {
@@ -168,10 +169,7 @@
         }
 
         .action-buttons {
-            display: grid;
-            grid-template-columns: 2fr 1fr;
-            gap: 10px;
-            margin-bottom: 20px;
+            display: none;
         }
 
         .btn {
@@ -343,18 +341,13 @@
             <div class="date-display-text" id="selectedDate">1/1/2025</div>
         </div>
         
-        <div class="today-text" id="todayText"></div>
-        
         <div class="date-picker">
             <button class="date-button" id="yearBtn" onclick="showYearPicker()">2025</button>
             <button class="date-button month" id="monthBtn" onclick="showMonthPicker()">1</button>
             <button class="date-button day" id="dayBtn" onclick="showDayPicker()">1</button>
         </div>
         
-        <div class="action-buttons">
-            <button class="btn btn-calculate" onclick="calculateFine()">هەژمارکردن</button>
-            <button class="btn btn-reset" onclick="resetDate()">پاککردنەوە</button>
-        </div>
+
         
         <div class="result-container">
             <div class="result-total" id="resultTotal">کۆی گشتی: ٠ دینار</div>
@@ -398,6 +391,8 @@
                 statusElement.textContent = 'داشکان چاڵاک نییە';
                 statusElement.style.color = '#DC2626';
             }
+            
+            calculateFine();
         }
 
         function init() {
@@ -406,7 +401,7 @@
             selectedMonth = today.getMonth() + 1;
             selectedDay = today.getDate();
             updateDisplay();
-            updateTodayText();
+            calculateFine();
         }
 
         function updateDisplay() {
@@ -414,12 +409,6 @@
             document.getElementById('monthBtn').textContent = selectedMonth;
             document.getElementById('dayBtn').textContent = selectedDay;
             document.getElementById('selectedDate').textContent = `${selectedDay}/${selectedMonth}/${selectedYear}`;
-        }
-
-        function updateTodayText() {
-            const today = new Date();
-            document.getElementById('todayText').textContent = 
-                `ڕێکەوتی ئەمڕۆ: ${today.getDate()}/${today.getMonth() + 1}/${today.getFullYear()}`;
         }
 
         function showYearPicker() {
@@ -438,6 +427,7 @@
                     selectedYear = year;
                     updateDisplay();
                     closeModal();
+                    calculateFine();
                 };
                 grid.appendChild(btn);
             }
@@ -460,6 +450,7 @@
                     selectedMonth = month;
                     updateDisplay();
                     closeModal();
+                    calculateFine();
                 };
                 grid.appendChild(btn);
             }
@@ -486,6 +477,7 @@
                     selectedDay = day;
                     updateDisplay();
                     closeModal();
+                    calculateFine();
                 };
                 grid.appendChild(btn);
             }
@@ -626,6 +618,7 @@
             init();
             document.getElementById('resultTotal').textContent = 'کۆی گشتی: ٠ دینار';
             document.getElementById('resultDetails').textContent = 'ووردەکاری مۆڵەت لێرە دەردەکەوێت';
+            calculateFine();
         }
 
         init();
