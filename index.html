@@ -43,17 +43,21 @@
             background: #FEF3C7;
             border: 3px solid #F59E0B;
             border-radius: 20px;
-            padding: 15px 20px;
+            padding: 20px;
             margin-bottom: 30px;
             display: flex;
             align-items: center;
-            justify-content: space-between;
+            justify-content: center;
+            gap: 20px;
         }
 
-        .discount-label {
-            color: #92400E;
-            font-size: 18px;
+        .discount-status {
+            font-size: 20px;
+            color: #DC2626;
             font-weight: bold;
+            transition: color 0.3s;
+            text-align: center;
+            margin: 0;
         }
 
         .switch {
@@ -99,14 +103,6 @@
 
         input:checked + .slider:before {
             transform: translateX(26px);
-        }
-
-        .discount-status {
-            font-size: 14px;
-            color: #DC2626;
-            margin-top: 5px;
-            font-weight: bold;
-            transition: color 0.3s;
         }
 
         .date-title {
@@ -306,10 +302,7 @@
         <h1>هەژمارکردنی پارەی مۆڵەتی شوفێری</h1>
         
         <div class="discount-container">
-            <div>
-                <div class="discount-label">داشکانی ٢٠٪ لەسەر غەرامە</div>
-                <div class="discount-status" id="discountStatus">داشکان چاڵاک نییە</div>
-            </div>
+            <div class="discount-status" id="discountStatus">داشکان چاڵاک نییە</div>
             <label class="switch">
                 <input type="checkbox" id="discountSwitch" onchange="toggleDiscount()">
                 <span class="slider"></span>
@@ -364,9 +357,11 @@
             if (discountActive) {
                 statusElement.textContent = 'داشکانی ٢٠٪ چاڵاکە';
                 statusElement.style.color = '#059669';
+                statusElement.style.fontSize = '20px';
             } else {
                 statusElement.textContent = 'داشکان چاڵاک نییە';
                 statusElement.style.color = '#DC2626';
+                statusElement.style.fontSize = '20px';
             }
             
             calculateFine();
