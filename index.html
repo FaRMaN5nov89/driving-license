@@ -36,27 +36,81 @@
             margin-bottom: 25px;
         }
 
-
-        .discount-banner {
-            background: linear-gradient(135deg, #86EFAC, #10B981);
+        .discount-container {
+            background: linear-gradient(135deg, #FEF3C7, #FDE68A);
             border: none;
-            border-radius: 20px;
-            padding: 20px 25px;
-            margin: 0 10px 25px;
-            text-align: center;
+            border-radius: 25px;
+            padding: 20px;
+            margin: 0 10px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
             box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+            flex-direction: row-reverse;
         }
 
-        .discount-banner-text {
-            font-size: 24px;
-            color: white;
+        .switch {
+            position: relative;
+            width: 80px;
+            height: 40px;
+        }
+
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #86EFAC;
+            transition: 0.4s;
+            border-radius: 40px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 32px;
+            width: 32px;
+            right: 4px;
+            top: 50%;
+            transform: translateY(-50%);
+            background-color: #10B981;
+            transition: 0.4s;
+            border-radius: 50%;
+        }
+
+        input:checked + .slider {
+            background-color: #FCA5A5;
+        }
+
+        input:checked + .slider:before {
+            background-color: #DC2626;
+            transform: translateY(-50%) translateX(-36px);
+        }
+
+        .discount-status {
+            font-size: 20px;
             font-weight: bold;
-            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
         }
 
+        .discount-status.active {
+            color: #059669;
+        }
+
+        .discount-status.inactive {
+            color: #DC2626;
+        }
 
         .date-title {
-            font-size: 24px;
+            font-size: 20px;
             color: #7C3AED;
             text-align: center;
             font-weight: bold;
@@ -296,18 +350,33 @@
                 margin-bottom: 20px;
             }
 
-            .discount-banner {
-                padding: 16px 18px;
-                margin: 0 5px 20px;
+            .discount-container {
+                padding: 15px;
+                margin: 0 5px 15px;
+                gap: 15px;
             }
 
-            .discount-banner-text {
-                font-size: 22px;
+            .switch {
+                width: 70px;
+                height: 35px;
             }
 
+            .slider:before {
+                height: 28px;
+                width: 28px;
+                right: 4px;
+            }
+
+            input:checked + .slider:before {
+                transform: translateY(-50%) translateX(-30px);
+            }
+
+            .discount-status {
+                font-size: 18px;
+            }
 
             .date-title {
-                font-size: 22px;
+                font-size: 18px;
                 margin-bottom: 12px;
             }
 
@@ -409,18 +478,32 @@
                 margin-bottom: 15px;
             }
 
-            .discount-banner {
-                padding: 14px 16px;
-                margin: 0 5px 16px;
+            .discount-container {
+                padding: 12px;
+                gap: 12px;
             }
 
-            .discount-banner-text {
-                font-size: 20px;
+            .switch {
+                width: 60px;
+                height: 30px;
             }
 
+            .slider:before {
+                height: 24px;
+                width: 24px;
+                right: 3px;
+            }
+
+            input:checked + .slider:before {
+                transform: translateY(-50%) translateX(-26px);
+            }
+
+            .discount-status {
+                font-size: 16px;
+            }
 
             .date-title {
-                font-size: 20px;
+                font-size: 16px;
             }
 
             .date-picker {
@@ -509,9 +592,12 @@
     <div class="container">
         <h1 class="title">🚗 پارەی مۆڵەتی شوفێری 🚗</h1>
 
-
-        <div class="discount-banner">
-            <div class="discount-banner-text">✅ داشکانی ٢٠٪ چاڵاکە</div>
+        <div class="discount-container">
+            <div class="discount-status inactive" id="discountStatus">❌ داشکان چاڵاك نی یە</div>
+            <label class="switch">
+                <input type="checkbox" id="discountSwitch" checked>
+                <span class="slider"></span>
+            </label>
         </div>
 
         <div class="date-title">📅 ڕێکەوتی بەسەرچوونی مۆڵەت:</div>
@@ -552,8 +638,10 @@
         let selectedYear = 2025;
         let selectedMonth = 1;
         let selectedDay = 1;
-        let discountActive = true; // داشکان هەمیشە چاڵاکە
+        let discountActive = false;
 
+        const discountSwitch = document.getElementById('discountSwitch');
+        const discountStatus = document.getElementById('discountStatus');
         const yearBtn = document.getElementById('yearBtn');
         const monthBtn = document.getElementById('monthBtn');
         const dayBtn = document.getElementById('dayBtn');
@@ -570,6 +658,19 @@
             selectedMonth = today.getMonth() + 1;
             selectedDay = today.getDate();
             updateDisplay();
+            toggleDiscount();
+            calculateFine();
+        }
+
+        function toggleDiscount() {
+            discountActive = !discountSwitch.checked;
+            if (discountActive) {
+                discountStatus.textContent = '✅ داشکانی ٢٠٪ چاڵاکە';
+                discountStatus.className = 'discount-status active';
+            } else {
+                discountStatus.textContent = '❌ داشکان چاڵاك نی یە';
+                discountStatus.className = 'discount-status inactive';
+            }
             calculateFine();
         }
 
@@ -760,6 +861,7 @@
             resultDetails.innerHTML = coloredDetails;
         }
 
+        discountSwitch.addEventListener('change', toggleDiscount);
         
         yearBtn.addEventListener('click', () => {
             const years = [];
