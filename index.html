@@ -4,6 +4,20 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>پارەی مۆڵەتی شوفێری</title>
+    
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#7C3AED">
+    
+    <!-- Apple iOS Support -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="مۆڵەت">
+    <link rel="apple-touch-icon" href="icon-192.png">
+    
+    <!-- Description -->
+    <meta name="description" content="حیسابکردنەوەی پارەی مۆڵەتی شوفێری بە کوردی">
+    
     <style>
         * {
             margin: 0;
@@ -893,6 +907,54 @@
         });
 
         initDate();
+    </script>
+
+    <!-- PWA Service Worker Registration -->
+    <script>
+        // تۆمارکردنی Service Worker بۆ کارکردن بێ ئینتەرنێت
+        if ('serviceWorker' in navigator) {
+            let newWorker;
+
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('sw.js')
+                    .then(registration => {
+                        console.log('✅ Service Worker registered successfully');
+                        
+                        // چێککردن بۆ ئەپدەیت
+                        registration.addEventListener('updatefound', () => {
+                            newWorker = registration.installing;
+                            
+                            newWorker.addEventListener('statechange', () => {
+                                if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                                    // ئەگەر وەشانی نوێ هەبێت
+                                    if (confirm('🔄 وەشانی نوێی بەرنامە ئامادەیە!\n\nدەتەوێت ئێستا ئەپدەیت بکەیت؟')) {
+                                        newWorker.postMessage({ action: 'skipWaiting' });
+                                    }
+                                }
+                            });
+                        });
+                    })
+                    .catch(error => {
+                        console.error('❌ Service Worker registration failed:', error);
+                    });
+
+                // کاتێک Service Worker ئەپدەیت دەکرێت
+                navigator.serviceWorker.addEventListener('controllerchange', () => {
+                    window.location.reload();
+                });
+            });
+
+            // پیشاندانی دۆخی ئۆنڵاین/ئۆفڵاین
+            window.addEventListener('online', () => {
+                console.log('🌐 ئۆنڵاین - پەیوەندی بە ئینتەرنێتەوە هەیە');
+            });
+
+            window.addEventListener('offline', () => {
+                console.log('📴 ئۆفڵاین - بێ ئینتەرنێت کاردەکات');
+            });
+        } else {
+            console.warn('⚠️ Service Worker پشتگیری ناکرێت لەم Browser ە');
+        }
     </script>
 </body>
 </html>

@@ -1,0 +1,24 @@
+{
+  "name": "پارەی مۆڵەتی شوفێری",
+  "short_name": "مۆڵەت",
+  "description": "حیسابکردنەوەی غرامەی مۆڵەتی شوفێری",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#7C3AED",
+  "theme_color": "#7C3AED",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
